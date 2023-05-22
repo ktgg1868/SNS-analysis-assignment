@@ -15,7 +15,7 @@ driver.implicitly_wait(10)
 
 search_bar = driver.find_element(By.ID, "query")
 search_bar.send_keys(keyword)
-driver.find_element(By.ID, "search_btn").click()
+driver.find_element(By.ID, "search-btn").click()
 driver.implicitly_wait(10)
 
 driver.find_element(By.LINK_TEXT,"VIEW").click()
@@ -28,7 +28,7 @@ full_html = driver.page_source
 
 soup = BeautifulSoup(full_html, 'html.parser')
 
-content_title = soup.find('ul',class_='total_area')
+content_title = soup.find('ul',class_='lst_total')
 
 #content_title = driver.find_elements(By.CSS_SELECTOR,'.total_wrap api_ani_send')
 
