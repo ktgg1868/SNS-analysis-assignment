@@ -11,7 +11,7 @@ import sys
 keyword = input("크롤링할 키워드는 무엇입니까?: ")
 f_name = input("검색 결과를 저장할 txt 파일경로와 이름을 지정하세요(c:\\py_temp\\파일이름.txt): ")
 fc_name = input("검색 결과를 저장할 csv 파일경로와 이름을 지정하세요(c:\\py_temp\\파일이름.csv): ")
-fx_name = input("검색 결과를 저장할 xls 파일경로와 이름을 지정하세요(c:\\py_temp\\파일이름.xlsx): ")
+fx_name = input("검색 결과를 저장할 xls 파일경로와 이름을 지정하세요(c:\\py_temp\\파일이름.xlsx): ") #xls형식으로는 진행되지 않아 xlsx형식으로 대체
 
 #크롬드리아버 자동업데이트 및 지정
 path = ChromeDriverManager().install()
