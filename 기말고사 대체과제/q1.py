@@ -12,12 +12,17 @@ path = "c:/python_temp/chromedriver/chromedriver.exe"
 driver = webdriver.Chrome(path)
 print("웹드라이버 설정 완료")
 
+#파일이름에 들어갈 시간 설정
+now = time.localtime()
+s = '%04d년 %02d월 %02d일 %02d시 %02d분 %02d초' %(now.tm_year, now.tm_mon, now.tm_mday , now.tm_hour, now.tm_min, now.tm_sec)
+
 #키워드 미리 할달(제출은 input으로 받아서 실행하기)
-search_name = "캠프"
-date_start = "2019/01/01"
-date_end = "2019/03/31"
-save_txt = "c:\\py_temp\\test123456.txt"
-save_xls = "c:\\py_temp\\test123456.xls"
+search_name = input("1.공고명으로 검색할 키워드는 무엇입니까?: ")
+date_start = input("2.조회 시작일자 입력(예:2019/01/01): ")
+date_end = input("3.조회 종료일자 입력(예:2019/03/31): ")
+f_path = input("4.파일로 저장할 폴더 이름을 입력하세요(예:c\py_temp\): ")
+save_txt = f"{f_path}{s}.txt"
+save_xls = f"{f_path}{s}.xls"
 
 #페이지 접속
 url = "https://www.g2b.go.kr/index.jsp"
@@ -58,8 +63,7 @@ rows = contents_list.find_all("tr")
 
 #txt파일 저장 과정
 orig_stdout = sys.stdout
-f_name = "c:\\py_temp\\test123456.txt"
-f = open(f_name, 'a', encoding='UTF-8')
+f = open(save_txt, 'a', encoding='UTF-8')
 sys.stdout = f
 
 #xls파일 저장 과정
@@ -146,7 +150,7 @@ sys.stdout = orig_stdout
 f.close()
 
 #xls파일 저장
-wb.save("c:\\py_temp\\test123456.xls")
+wb.save(save_xls)
 
 
 print("크롤링 작업을 완료하였습니다.")
