@@ -21,9 +21,9 @@ s = '%04d년 %02d월 %02d일 %02d시 %02d분 %02d초' %(now.tm_year, now.tm_mon,
 search_name = input("1.공고명으로 검색할 키워드는 무엇입니까?: ")
 date_start = input("2.조회 시작일자 입력(예:2019/01/01): ")
 date_end = input("3.조회 종료일자 입력(예:2019/03/31): ")
-f_path = input("4.파일로 저장할 폴더 이름을 입력하세요(예:c\py_temp\): ")
-save_txt = f"{f_path}{s}.txt"
-save_xls = f"{f_path}{s}.xls"
+file_path = input("4.파일로 저장할 폴더 이름을 입력하세요(예:c\py_temp\): ")
+save_txt = f"{file_path}{s}.txt"
+save_xls = f"{file_path}{s}.xls"
 
 #페이지 접속
 url = "https://www.g2b.go.kr/index.jsp"
