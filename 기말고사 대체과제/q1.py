@@ -1,14 +1,15 @@
 from selenium import webdriver
-import requests
+from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.common.by import By
 from bs4 import BeautifulSoup as bs
 from openpyxl import Workbook
+import requests
 import time
 import sys
 
 
 print("웹드라이버 설정 시작")
-path = "c:/python_temp/chromedriver/chromedriver.exe"
+path = ChromeDriverManager().install()
 driver = webdriver.Chrome(path)
 print("웹드라이버 설정 완료")
 
