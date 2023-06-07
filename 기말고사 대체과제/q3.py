@@ -5,8 +5,10 @@ import requests
 import os
 import time
 
+print("웹드라이버 설정 시작")
 path = ChromeDriverManager().install()
 driver = webdriver.Chrome(path)
+print("웹드라이버 설정 완료")
 
 print("================================================================")
 print("pixabay 사이트에서 이미지를 검색하여 수집하는 크롤러 입니다")
