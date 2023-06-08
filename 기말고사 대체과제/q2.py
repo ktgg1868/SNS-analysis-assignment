@@ -10,7 +10,6 @@ import sys
 now = time.localtime()
 s = '%04d년 %02d월 %02d일 %02d시 %02d분 %02d초' %(now.tm_year, now.tm_mon, now.tm_mday , now.tm_hour, now.tm_min, now.tm_sec)
 
-
 # WebDriver 설정
 print("웹드라이버 설정 시작")
 path = "c:/python_temp/chromedriver/chromedriver.exe"
@@ -39,6 +38,7 @@ driver.get(url)
 html = driver.page_source
 soup = BeautifulSoup(html, 'html.parser')
 
+#크롤링 결과값을 넣을 리스트 생성
 blog_posts = soup.find('ul',class_='lst_total')
 num = 0
 num2 = [ ]
@@ -52,6 +52,7 @@ orig_stdout = sys.stdout
 f = open(save_txt, 'a', encoding='UTF-8')
 sys.stdout = f
 
+#데이터 수집 (count값만큼 반복문 실행)
 for i in blog_posts.find_all('li', 'bx'):
     num2.append(num)
     print(f"총 {count} 건 중 {num+1} 번째 블로그 데이터를 수집합니다.==========")
@@ -78,6 +79,7 @@ for i in blog_posts.find_all('li', 'bx'):
     if num >= count:
         break
 
+#xlsx에 넣을 데이터프레임 생성
 data = {
     ' ': num2,
     '블로그 주소': link,
@@ -87,6 +89,7 @@ data = {
 }
 df = pd.DataFrame(data)
 
+#xlsx파일에 넣을 순서 정의
 df = df[[' ', '블로그 주소', '작성자 닉네임', '작성 일자', '블로그 내용']]
 
 #txt파일 저장 및 종료

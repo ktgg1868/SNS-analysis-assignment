@@ -15,7 +15,7 @@ num_videos = int(input("검색할 영상의 개수를 입력하세요: "))
 num_comments = int(input("추출할 댓글의 개수를 입력하세요: "))
 file_path = input("크롤링한 결과를 저장할 경로를 입력하세요(예: C:/py_temp/): ")
 
-# WebDriver로 Chrome을 실행합니다. (크롬 드라이버가 필요합니다)
+#웹드라이버 설정
 print("웹드라이버 설정 시작")
 path = ChromeDriverManager().install()
 driver = webdriver.Chrome(path)

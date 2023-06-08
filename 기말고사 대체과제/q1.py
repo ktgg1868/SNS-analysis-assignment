@@ -7,7 +7,7 @@ import requests
 import time
 import sys
 
-
+#웹드라이버 설정
 print("웹드라이버 설정 시작")
 path = ChromeDriverManager().install()
 driver = webdriver.Chrome(path)
