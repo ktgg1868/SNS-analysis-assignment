@@ -1,46 +1,69 @@
-##구글에서 pdf파일 다운로드 받기
-
-import os
+from bs4 import BeautifulSoup as bs
+from selenium import webdriver
+from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 import requests
-from bs4 import BeautifulSoup
-from urllib.parse import unquote
+import os
+import time
 
-def download_pdf(url, save_dir):
-    response = requests.get(url, stream=True)
-    filename = unquote(url.split("/")[-1])  # URL에서 파일명 추출 및 디코딩
-    save_path = os.path.join(save_dir, filename)
-    with open(save_path, 'wb') as file:
-        for chunk in response.iter_content(chunk_size=1024):
-            if chunk:
-                file.write(chunk)
+# WebDriver로 Chrome을 실행합니다. (크롬 드라이버가 필요합니다)
+print("웹드라이버 설정 시작")
+path = ChromeDriverManager().install()
+driver = webdriver.Chrome(path)
+print("웹드라이버 설정 완료")
 
-def download_pdf_from_googleSearch(keyword, save_dir):
-    # Google 검색 URL
-    search_url = f"https://www.google.com/search?q={keyword}&btnI"
+#정보 입력받기
+keyword = input("구글에서 다운받을 pdf의 주제를 입력하세요: ")
+count = int(input("다운받을 pdf파일의 개수를 입력하세요: "))
+folder_path = input("저장폴더경로: ")
 
-    # 검색 결과 페이지 요청
-    response = requests.get(search_url)
-    soup = BeautifulSoup(response.text, 'html.parser')
+url = "https://www.google.com/search?q=" + keyword
 
-    # PDF 파일 링크 추출
-    pdf_links = []
-    for link in soup.find_all('a'):
-        href = link.get('href')
-        if href.endswith('.pdf'):
-            pdf_links.append(href)
+driver.get(url)
+html = driver.page_source
+soup = bs(html, 'html.parser')
+elements = soup.find_all('span', class_='ZGwO7 s4H5Cf C0kchf NaCKVc yUTMj VDgVie')
+href_list = []
 
-    # PDF 파일 다운로드
-    if pdf_links:
-        for i, link in enumerate(pdf_links):
-            pdf_url = link
-            download_pdf(pdf_url, save_dir)
-            print(f"다운로드 완료: {pdf_url}")
-    else:
-        print("PDF 파일을 찾을 수 없습니다.")
+#검색결과에서 pdf파일로 연결되는 하이퍼링크 찾아서 리스트에 추가하기
+while len(href_list) < count:
+    time.sleep(3)
+    html = driver.page_source
+    soup = bs(html, 'html.parser')
+    elements = soup.find_all('a')
+    for element in elements:
+        href = element.get('href')
+        if href and href.endswith('.pdf'):
+            href_list.append(href)
+            if len(href_list) == count:
+                break
+    driver.find_element(By.TAG_NAME,'body').send_keys(Keys.END)
+    
+    next_button = WebDriverWait(driver, 10).until(
+        EC.presence_of_element_located((By.CSS_SELECTOR, '#pnnext'))  # 다음 페이지 버튼을 찾음
+    )
+    next_button.click()
+    
+    continue
 
-# 키워드 입력
-keyword = input("검색할 키워드를 입력하세요: ")
-save_dir = input("파일을 저장할 디렉토리를 입력하세요: ")
 
-# 크롤링 시작
-download_pdf_from_googleSearch(keyword, save_dir)
+#입력받은 폴더경로가 없을 경우 생성
+if not os.path.exists(folder_path):
+    print(f"입력하신 폴더경로인 {folder_path} 가 존재하지 않아 경로 생성 후 다운로드 진행합니다.")
+    os.makedirs(folder_path)
+else:
+    print(f"입력한 경로인 {folder_path} 가 존재하어 바로 PDF 다운로드하겠습니다.")
+
+#리스트의 주로에서 파일 받아오기
+for index, href in enumerate(href_list):
+    response = requests.get(href)
+    file_path = os.path.join(folder_path, f"{keyword} 검색결과 {index+1}.pdf")
+    with open(file_path, 'wb') as f:
+        f.write(response.content)
+    print(f"PDF 파일 {index+1} 저장 완료")
+
+print("크롤링 작업을 완료하여 종료합니다.")
+driver.close()
