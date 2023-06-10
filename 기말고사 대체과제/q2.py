@@ -1,5 +1,6 @@
 #import requests
 from selenium import webdriver
+from webdriver_manager.chrome import ChromeDriverManager
 from bs4 import BeautifulSoup
 from openpyxl import Workbook
 import pandas as pd
@@ -12,7 +13,7 @@ s = '%04d년 %02d월 %02d일 %02d시 %02d분 %02d초' %(now.tm_year, now.tm_mon,
 
 # WebDriver 설정
 print("웹드라이버 설정 시작")
-path = "c:/python_temp/chromedriver/chromedriver.exe"
+path = ChromeDriverManager().install()
 driver = webdriver.Chrome(path)
 print("웹드라이버 설정 완료")
 
@@ -31,7 +32,7 @@ save_xlsx = (f"{file_path}{s} {keyword}.xlsx")
 
 # 크롤링 시작
 # URL 설정
-url = f"https://search.naver.com/search.naver?query={keyword} +%2B{need_words} -{ban_words}&nso=&where=blog&sm=tab_opt"
+url = f"https://search.naver.com/search.naver?query={keyword} +%2B{need_words} -{ban_words}&sm=tab_opt&nso=p%3Afrom{day_start}to{day_end}"
 
 # 검색 결과 페이지 요청
 driver.get(url)
