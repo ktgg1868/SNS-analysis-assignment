@@ -1,4 +1,3 @@
-#import requests
 from selenium import webdriver
 from webdriver_manager.chrome import ChromeDriverManager
 from bs4 import BeautifulSoup
@@ -56,11 +55,11 @@ sys.stdout = f
 #데이터 수집 (count값만큼 반복문 실행)
 for i in blog_posts.find_all('li', 'bx'):
     num2.append(num)
-    print(f"총 {count} 건 중 {num+1} 번째 블로그 데이터를 수집합니다.==========")
+    print("%d번째 블로그 데이터를 수집합니다.=========="%num)
     
-    link_result = i.find('a', class_='api_txt_lines total_tit')['href']
+    link_result = i.find('a').get('data-url')
     link.append(link_result)
-    print("1. 블로그 주소: ",link_result)
+    print("1. 블로그 링크: ",link_result)
     
     nickname_result = i.find('a', 'sub_txt sub_name').get_text()
     nickname.append(nickname_result)
@@ -79,11 +78,11 @@ for i in blog_posts.find_all('li', 'bx'):
     num += 1
     if num >= count:
         break
-
+    
 #xlsx에 넣을 데이터프레임 생성
 data = {
     ' ': num2,
-    '블로그 주소': link,
+    '블로그 링크': link,
     '작성자 닉네임': nickname,
     '작성 일자': date,
     '블로그 내용': content
@@ -91,7 +90,7 @@ data = {
 df = pd.DataFrame(data)
 
 #xlsx파일에 넣을 순서 정의
-df = df[[' ', '블로그 주소', '작성자 닉네임', '작성 일자', '블로그 내용']]
+df = df[[' ', '블로그 링크', '작성자 닉네임', '작성 일자', '블로그 내용']]
 
 #txt파일 저장 및 종료
 sys.stdout = orig_stdout
@@ -99,7 +98,6 @@ f.close()
 
 # DataFrame을 XLSX 파일로 저장합니다
 df.to_excel(save_xlsx, index=False)
-
 
 #종료
 print("크롤링 작업을 완료하였습니다.")
