@@ -20,6 +20,13 @@ keyword = input("구글에서 다운받을 pdf의 주제를 입력하세요: ")
 count = int(input("다운받을 pdf파일의 개수를 입력하세요: "))
 folder_path = input("저장폴더경로: ")
 
+#입력받은 폴더경로가 없을 경우 생성
+if not os.path.exists(folder_path):
+    print(f"입력하신 폴더경로인 {folder_path} 가 존재하지 않아 경로 생성 후 다운로드 진행합니다.")
+    os.makedirs(folder_path)
+else:
+    print(f"입력한 경로인 {folder_path} 가 존재하어 바로 PDF 다운로드하겠습니다.")
+    
 url = "https://www.google.com/search?q=" + keyword
 
 driver.get(url)
@@ -50,13 +57,6 @@ while len(href_list) < count:
     continue
 
 
-#입력받은 폴더경로가 없을 경우 생성
-if not os.path.exists(folder_path):
-    print(f"입력하신 폴더경로인 {folder_path} 가 존재하지 않아 경로 생성 후 다운로드 진행합니다.")
-    os.makedirs(folder_path)
-else:
-    print(f"입력한 경로인 {folder_path} 가 존재하어 바로 PDF 다운로드하겠습니다.")
-
 #리스트의 주로에서 파일 받아오기
 for index, href in enumerate(href_list):
     response = requests.get(href)
@@ -65,5 +65,6 @@ for index, href in enumerate(href_list):
         f.write(response.content)
     print(f"PDF 파일 {index+1} 저장 완료")
 
+#크롤링 종료
 print("크롤링 작업을 완료하여 종료합니다.")
 driver.close()

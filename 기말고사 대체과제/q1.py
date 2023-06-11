@@ -6,6 +6,7 @@ from openpyxl import Workbook
 import requests
 import time
 import sys
+import os
 
 #웹드라이버 설정
 print("웹드라이버 설정 시작")
@@ -21,9 +22,16 @@ s = '%04d년 %02d월 %02d일 %02d시 %02d분 %02d초' %(now.tm_year, now.tm_mon,
 search_name = input("1.공고명으로 검색할 키워드는 무엇입니까?: ")
 date_start = input("2.조회 시작일자 입력(예:2019/01/01): ")
 date_end = input("3.조회 종료일자 입력(예:2019/03/31): ")
-file_path = input("4.파일로 저장할 폴더 이름을 입력하세요(예:c\py_temp\): ")
-save_txt = f"{file_path}{s}.txt"
-save_xls = f"{file_path}{s}.xls"
+folder_path = input("4.파일로 저장할 폴더 이름을 입력하세요(예:c\py_temp\): ")
+save_txt = f"{folder_path}{s}.txt"
+save_xls = f"{folder_path}{s}.xls"
+
+#입력받은 폴더경로가 없을 경우 생성
+if not os.path.exists(folder_path):
+    print(f"입력하신 폴더경로인 {folder_path} 가 존재하지 않아 경로 생성 후 크롤링 작업을 진행합니다.")
+    os.makedirs(folder_path)
+else:
+    print(f"입력한 경로인 {folder_path} 가 존재하어 바로 크롤링 작업을 시작하겠습니다.")
 
 #페이지 접속
 url = "https://www.g2b.go.kr/index.jsp"

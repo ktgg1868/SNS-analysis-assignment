@@ -20,6 +20,13 @@ search_query = input('1. 크롤링할 이미지의 키워드는 무엇입니까?
 num_images = int(input('2. 크롤링 할 건수는 몇건입니까?: '))
 file_path = input('3. 파일이 저장도리 경로를 입력하세요(예: c:\data\): ')
 
+#입력받은 폴더경로가 없을 경우 생성
+if not os.path.exists(file_path):
+    print(f"입력하신 폴더경로인 {file_path} 가 존재하지 않아 경로 생성 후 다운로드 진행합니다.")
+    os.makedirs(file_path)
+else:
+    print(f"입력한 경로인 {file_path} 가 존재하어 바로 이미지를 다운로드하겠습니다.")
+
 #pixabay 개인으로 할당된 API key 입력
 api_key = "37047723-0c361e630de66c41f0139d791"
 
@@ -27,7 +34,6 @@ api_key = "37047723-0c361e630de66c41f0139d791"
 url = f"https://pixabay.com/api/?key={api_key}&q={search_query}&image_type=photo"
 
 #다운받는 시간입력 및 폴더 생성
-
 now = time.localtime()
 s = '%04d년 %02d월 %02d일 %02d시 %02d분 %02d초' %(now.tm_year, now.tm_mon, now.tm_mday , now.tm_hour, now.tm_min, now.tm_sec)
 

@@ -15,6 +15,13 @@ num_videos = int(input("검색할 영상의 개수를 입력하세요: "))
 num_comments = int(input("추출할 댓글의 개수를 입력하세요: "))
 file_path = input("크롤링한 결과를 저장할 경로를 입력하세요(예: C:/py_temp/): ")
 
+#입력받은 폴더경로가 없을 경우 생성
+if not os.path.exists(file_path):
+    print(f"입력하신 폴더경로인 {file_path} 가 존재하지 않아 경로 생성 후 크롤링 작업을 진행합니다.")
+    os.makedirs(file_path)
+else:
+    print(f"입력한 경로인 {file_path} 가 존재하어 바로 크롤링 작업을 시작하겠습니다.")
+
 #웹드라이버 설정
 print("웹드라이버 설정 시작")
 path = ChromeDriverManager().install()
