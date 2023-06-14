@@ -9,11 +9,18 @@ import time
 import sys
 import os
 
+#작업시간을 변수에 저장
+now = time.localtime()
+s = '%04d년 %02d월 %02d일 %02d시 %02d분 %02d초' % (now.tm_year, now.tm_mon, now.tm_mday, now.tm_hour, now.tm_min, now.tm_sec)
+
 # 사용자로부터 키워드, 영상 개수, 댓글 개수, 저장 경로를 입력받습니다.
 keyword = input("검색할 키워드를 입력하세요: ")
 num_videos = int(input("검색할 영상의 개수를 입력하세요: "))
 num_comments = int(input("추출할 댓글의 개수를 입력하세요: "))
 file_path = input("크롤링한 결과를 저장할 경로를 입력하세요(예: C:/py_temp/): ")
+save_txt = f"{file_path}{s} {keyword}.txt"
+save_csv = f"{file_path}{s} {keyword}.csv"
+save_xlsx = f"{file_path}{s} {keyword}.xlsx"
 
 #입력받은 폴더경로가 없을 경우 생성
 if not os.path.exists(file_path):
@@ -45,20 +52,12 @@ while len(video_links) < num_videos:
     for link in soup.find_all('a', {'id': 'video-title'}):
         video_links.append("https://www.youtube.com" + link['href'])
 
-
-# 파일을 저장할 폴더 경로를 생성합니다.
-now = time.localtime()
-timestamp = '%04d년 %02d월 %02d일 %02d시 %02d분 %02d초' % (now.tm_year, now.tm_mon, now.tm_mday, now.tm_hour, now.tm_min, now.tm_sec)
-f_path = os.path.join(file_path, timestamp + ' - ' + keyword)
-os.makedirs(f_path, exist_ok=True)
-
 # 데이터를 저장할 리스트를 생성합니다.
 data = []
 
 #txt파일 저장 과정
 orig_stdout = sys.stdout
-txt_file_path = os.path.join(f_path, f'{keyword}.txt')
-f = open(txt_file_path, 'a', encoding="UTF-8")
+f = open(save_txt, 'a', encoding="UTF-8")
 sys.stdout = f
 
 # 댓글 추출.
@@ -105,11 +104,9 @@ driver.quit()
 df = pd.DataFrame(data, columns=['','영상 URL', '댓글 작성자명', '댓글 작성시간', '댓글 내용'])
 
 # csv 파일로 저장합니다.
-csv_file_path = os.path.join(f_path, f'{keyword}.csv')
-df.to_csv(csv_file_path, index=False, header=True)
+df.to_csv(save_csv, index=False, header=True)
 
-# xls 파일로 저장합니다.
-xlsx_file_path = os.path.join(f_path, f'{keyword}.xlsx')
-df.to_excel(xlsx_file_path, index=False, header=True)
+# xlsx 파일로 저장합니다.
+df.to_excel(save_xlsx, index=False, header=True)
 
 print("데이터 저장이 완료되었습니다.")
