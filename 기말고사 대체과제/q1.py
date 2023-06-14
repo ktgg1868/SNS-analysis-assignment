@@ -24,6 +24,7 @@ date_start = input("2.조회 시작일자 입력(예:2019/01/01): ")
 date_end = input("3.조회 종료일자 입력(예:2019/03/31): ")
 folder_path = input("4.파일로 저장할 폴더 이름을 입력하세요(예:c\py_temp\): ")
 save_txt = f"{folder_path}{s}.txt"
+save_csv = f"{folder_path}{s}.csv"
 save_xls = f"{folder_path}{s}.xls"
 
 #입력받은 폴더경로가 없을 경우 생성
@@ -157,6 +158,9 @@ for row in rows:
 #txt파일 저장 및 종료
 sys.stdout = orig_stdout
 f.close()
+
+#csv파일 저장
+wb.save(save_csv)
 
 #xls파일 저장
 wb.save(save_xls)

@@ -28,6 +28,7 @@ day_end = input("5. 조회 종료일자 입력(예:20190430): ")
 count = int(input("6. 크롤링 할 건수는 몇건인지 입력하세요: "))
 file_path = input("7. 파일을 저장할 경로를 입력하세요: ")
 save_txt = (f"{file_path}{s} {keyword}.txt")
+save_csv = (f"{file_path}{s} {keyword}.csv")
 save_xlsx = (f"{file_path}{s} {keyword}.xlsx")
 
 #입력받은 폴더경로가 없을 경우 생성
@@ -109,6 +110,9 @@ df = df[[' ', "블로그 제목",'블로그 링크', '작성자 닉네임', '작
 #txt파일 저장 및 종료
 sys.stdout = orig_stdout
 f.close()
+
+#DataFrame을 csv파일로 저장
+df.to_csv(save_csv, index=False)
 
 # DataFrame을 XLSX 파일로 저장합니다
 df.to_excel(save_xlsx, index=False)

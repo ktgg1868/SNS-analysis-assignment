@@ -37,7 +37,7 @@ href_list = []
 
 #검색결과에서 pdf파일로 연결되는 하이퍼링크 찾아서 리스트에 추가하기
 while len(href_list) < count:
-    time.sleep(3)
+    driver.implicitly_wait(3)
     html = driver.page_source
     soup = bs(html, 'html.parser')
     elements = soup.find_all('a')
@@ -47,19 +47,27 @@ while len(href_list) < count:
             href_list.append(href)
             if len(href_list) == count:
                 break
-    driver.find_element(By.TAG_NAME,'body').send_keys(Keys.END)
+    driver.find_element(By.TAG_NAME, 'body').send_keys(Keys.END)
+    time.sleep(1)
     
-    next_button = WebDriverWait(driver, 10).until(
-        EC.presence_of_element_located((By.CSS_SELECTOR, '#pnnext'))  # 다음 페이지 버튼을 찾음
-    )
-    next_button.click()
-    
-    continue
+    try:
+        if EC.presence_of_element_located((By.CSS_SELECTOR, '#pnnext')) is not None:
+            next_button = WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.CSS_SELECTOR, '#pnnext')))        
+            next_button.click()
+        
+        else:
+            driver.find_element(By.TAG_NAME, 'body').send_keys(Keys.PAGE_DOWN)
+        
+        
+    except:
+        break
+        
 
 
 #리스트의 주로에서 파일 받아오기
 for index, href in enumerate(href_list):
-    response = requests.get(href)
+    response = requests.get(href, verify=False) #SSL인증 에러 방지
     file_path = os.path.join(folder_path, f"{keyword} 검색결과 {index+1}.pdf")
     with open(file_path, 'wb') as f:
         f.write(response.content)
